@@ -1,0 +1,77 @@
+{
+  "project_info": {
+    "project_number": "6746703710",
+    "firebase_url": "https://chat-7d927-default-rtdb.firebaseio.com",
+    "project_id": "chat-7d927",
+    "storage_bucket": "chat-7d927.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:6746703710:android:b280514bd82ba56c5df1cf",
+        "android_client_info": {
+          "package_name": "com.example.resturant"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "6746703710-8ffbmh27v9sfj49427mk439lqspm5btq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.resturant",
+            "certificate_hash": "84e7837364084f6852a9a5f9fb67dc7d664ff5cf"
+          }
+        },
+        {
+          "client_id": "6746703710-u0ms6hcp2c7a9j24dc9jq9ij0b9r67b4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCs5WNlUvMw1wE9mAShg3Fu08nyQY0oY8E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "6746703710-u0ms6hcp2c7a9j24dc9jq9ij0b9r67b4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:6746703710:android:ea22b32f03b6c4135df1cf",
+        "android_client_info": {
+          "package_name": "com.example.variable"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "6746703710-u0ms6hcp2c7a9j24dc9jq9ij0b9r67b4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCs5WNlUvMw1wE9mAShg3Fu08nyQY0oY8E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "6746703710-u0ms6hcp2c7a9j24dc9jq9ij0b9r67b4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

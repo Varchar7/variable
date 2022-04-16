@@ -1,0 +1,18 @@
+{
+    "username": "uid",
+    "email": "uid",
+    "password": "uid",
+    "image": "uid",
+    "uid": "uid",
+    "account": {
+        "post": 1,
+        "followings": [],
+        "followers": [],
+        "points": 10,
+        "accuracy": 10
+    },
+    "store": {
+        "favourite": 10,
+        "saved": 10
+    }
+}
