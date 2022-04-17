@@ -38,19 +38,17 @@ class FirebaseDatabaseCollection {
 
   static Future createPostDatabase(
     Map<String, dynamic> data,
-    List<Uint8List> images,
+    Uint8List? images,
   ) async {
-    List<String> imagesURL = [];
     String id = postsCollectionReference.doc().id;
-    for (var i = 0; i < images.length; i++) {
-      final url = await PostImageService.uploadPostPicture(
-          postId: id, image: images[i], index: i);
-      imagesURL.add(url);
+    String url = '';
+    if (images != null) {
+      url = await PostImageService.uploadPostPicture(postId: id, image: images);
     }
     data.addAll(
       {
         "id": id,
-        "images": imagesURL,
+        "images": url,
       },
     );
     postsCollectionReference.doc(id).set(data);
@@ -61,15 +59,14 @@ class FirebaseDatabaseCollection {
     );
   }
 
-  static Future deletePostDatabase(String id) async {
-    postsCollectionReference.doc(id).delete();
-    updateDataOnUserDatabase(
+  static Future deletePostDatabase(String id, bool images) async {
+    await postsCollectionReference.doc(id).delete();
+    await updateDataOnUserDatabase(
       {
-        "account": {
-          "posts": FieldValue.arrayRemove([id])
-        }
+        "posts": FieldValue.arrayRemove([id])
       },
     );
+    images ? await PostImageService.deletePostPicture(id) : false;
   }
 
   static Future<Map<String, dynamic>> selectPostDatabase(String id) async {

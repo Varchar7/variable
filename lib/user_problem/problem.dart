@@ -1,10 +1,13 @@
 import 'dart:typed_data';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:variable/auth/auth.dart';
+import 'package:variable/bloc/post/post_bloc.dart';
+import 'package:variable/model/post.dart';
 import 'package:variable/service/Firebase/auth.dart';
-import 'package:variable/service/Firebase/curd_user_database.dart';
 import 'package:variable/user_problem/image_slider.dart';
 import 'package:variable/widget/snackbar.dart';
 import 'package:variable/widget/style.dart';
@@ -23,7 +26,7 @@ class _IssueScreenState extends State<IssueScreen>
   int importance = 0;
   TextEditingController question = TextEditingController();
   TextEditingController description = TextEditingController();
-  List<Uint8List> images = [];
+  Uint8List? issueImage;
   final issues = [];
 
   @override
@@ -36,7 +39,7 @@ class _IssueScreenState extends State<IssueScreen>
     final file = await imagePicker.pickImage(source: ImageSource.gallery);
     if (file != null) {
       final image = await file.readAsBytes();
-      images.add(image);
+      issueImage = image;
       setState(() {});
     } else {
       popSnackbar(
@@ -48,202 +51,213 @@ class _IssueScreenState extends State<IssueScreen>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.only(
-          left: 10,
-          right: 10,
-        ),
-        child: CustomScrollView(
-          slivers: [
-            SliverAppBar(
-              expandedHeight: 75.0,
-              leading: IconButton(
-                onPressed: () async {
-                  await KeepUser.logOutUser();
-                  Navigator.of(context).pop();
-                },
-                color: Colors.black,
-                icon: const Icon(
-                  Icons.logout,
-                ),
-              ),
-              flexibleSpace: const FlexibleSpaceBar(
-                title: Text(
-                  'Issue',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontFamily: 'Ubuntu',
-                    decorationStyle: TextDecorationStyle.solid,
-                    decorationThickness: 1,
-                  ),
-                ),
-                centerTitle: true,
-              ),
-              backgroundColor: Colors.transparent,
-              shadowColor: Colors.transparent,
-              actions: [
-                IconButton(
-                  onPressed: () {},
-                  color: Colors.green,
-                  icon: const Icon(
-                    Icons.notifications,
-                  ),
-                ),
-              ],
+    return BlocListener<PostBloc, PostState>(listener: (context, state) {
+      if (state is SavedState) {
+        isLoading = !isLoading;
+        question.clear();
+        description.clear();
+        issueImage = null;
+        importance = 0;
+        popSnackbar(context: context, text: 'Post Uploaded Succecfully',);
+        setState(() {});
+      }
+    }, child: BlocBuilder<PostBloc, PostState>(
+      builder: (context, state) {
+        return Scaffold(
+          body: Padding(
+            padding: const EdgeInsets.only(
+              left: 10,
+              right: 10,
             ),
-            SliverList(
-              delegate: SliverChildListDelegate(
-                [
-                  Text(
-                    'Add your Question',
-                    style: style(),
-                    textAlign: TextAlign.center,
-                    textScaleFactor: 1.75,
-                  ),
-                  Text(
-                    'Add Images',
-                    style: style(),
-                    textAlign: TextAlign.left,
-                    textScaleFactor: 1.25,
-                  ),
-                  images.isNotEmpty
-                      ? ImageSlider(images: images)
-                      : InkWell(
-                          onTap: () async {
-                            await pickImage();
-                          },
-                          child: Card(
-                            elevation: 7,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                const Icon(
-                                  Icons.image,
-                                  size: 150,
-                                ),
-                                Text(
-                                  'Add Images',
-                                  style: style(),
-                                  textAlign: TextAlign.center,
-                                  textScaleFactor: 1.75,
-                                ),
-                                SizedBox(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.1,
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                  images.isNotEmpty
-                      ? Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            ElevatedButton(
-                              onPressed: () async {
-                                await pickImage();
-                              },
-                              style: ElevatedButton.styleFrom(
-                                shape: const StadiumBorder(),
-                              ),
-                              child: Text(
-                                'Add more',
-                                style: style().copyWith(
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                          ],
-                        )
-                      : const SizedBox(),
-                  Text(
-                    'Question',
-                    style: style(),
-                    textScaleFactor: 1.25,
-                  ),
-                  InputField(
-                    controller: question,
-                  ),
-                  Text(
-                    'Description',
-                    style: style(),
-                    textScaleFactor: 1.25,
-                  ),
-                  InputField(
-                    controller: description,
-                    textArea: 12,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 7, right: 7),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Importance',
-                          style: style(),
-                          textScaleFactor: 1.25,
-                        ),
-                        Text(
-                          '$importance %',
-                          style: style(),
-                          textScaleFactor: 1.25,
-                        ),
-                      ],
+            child: CustomScrollView(
+              slivers: [
+                SliverAppBar(
+                  expandedHeight: 75.0,
+                  leading: IconButton(
+                    onPressed: () async {
+                      await KeepUser.logOutUser();
+                      Navigator.of(context).pop();
+                    },
+                    color: Colors.black,
+                    icon: const Icon(
+                      Icons.logout,
                     ),
                   ),
-                  Slider(
-                    activeColor: Colors.greenAccent,
-                    thumbColor: Colors.greenAccent,
-                    inactiveColor: Colors.greenAccent,
-                    label: "Importance",
-                    value: importance.toDouble(),
-                    onChanged: (value) {
-                      setState(() {
-                        importance = value.toInt();
-                      });
-                    },
-                    min: 0,
-                    max: 100,
+                  flexibleSpace: const FlexibleSpaceBar(
+                    title: Text(
+                      'Issue',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontFamily: 'Ubuntu',
+                        decorationStyle: TextDecorationStyle.solid,
+                        decorationThickness: 1,
+                      ),
+                    ),
+                    centerTitle: true,
                   ),
-                  isLoading
-                      ? Column(
-                          children: [
-                            const CircularProgressIndicator(
-                              color: Colors.greenAccent,
+                  backgroundColor: Colors.transparent,
+                  shadowColor: Colors.transparent,
+                  actions: [
+                    IconButton(
+                      onPressed: () {},
+                      color: Colors.green,
+                      icon: const Icon(
+                        Icons.notifications,
+                      ),
+                    ),
+                  ],
+                ),
+                SliverList(
+                  delegate: SliverChildListDelegate(
+                    [
+                      Text(
+                        'Add your Question',
+                        style: style(),
+                        textAlign: TextAlign.center,
+                        textScaleFactor: 1.75,
+                      ),
+                      Text(
+                        'Add Images',
+                        style: style(),
+                        textAlign: TextAlign.left,
+                        textScaleFactor: 1.25,
+                      ),
+                      issueImage != null
+                          ? ImageSlider(images: issueImage!)
+                          : InkWell(
+                              onTap: () async {
+                                await pickImage();
+                              },
+                              child: Card(
+                                elevation: 7,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    const Icon(
+                                      Icons.image,
+                                      size: 150,
+                                    ),
+                                    Text(
+                                      'Add Images',
+                                      style: style(),
+                                      textAlign: TextAlign.center,
+                                      textScaleFactor: 1.75,
+                                    ),
+                                    SizedBox(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.1,
+                                    )
+                                  ],
+                                ),
+                              ),
                             ),
-                            const SizedBox(
-                              height: 10,
+                      Text(
+                        'Question',
+                        style: style(),
+                        textScaleFactor: 1.25,
+                      ),
+                      InputField(
+                        controller: question,
+                      ),
+                      Text(
+                        'Description',
+                        style: style(),
+                        textScaleFactor: 1.25,
+                      ),
+                      InputField(
+                        controller: description,
+                        textArea: 12,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 7, right: 7),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Importance',
+                              style: style(),
+                              textScaleFactor: 1.25,
                             ),
                             Text(
-                              'Please wait ',
+                              '$importance %',
                               style: style(),
                               textScaleFactor: 1.25,
                             ),
                           ],
-                        )
-                      : ElevatedButton(
-                          onPressed: onPost,
-                          style: ElevatedButton.styleFrom(
-                            primary: Colors.greenAccent,
-                            shape: const StadiumBorder(),
-                          ),
-                          child: Text('Post', style: style()),
                         ),
-                ],
-              ),
+                      ),
+                      Slider(
+                        activeColor: Colors.greenAccent,
+                        thumbColor: Colors.greenAccent,
+                        inactiveColor: Colors.greenAccent,
+                        label: "Importance",
+                        value: importance.toDouble(),
+                        onChanged: (value) {
+                          setState(() {
+                            importance = value.toInt();
+                          });
+                        },
+                        min: 0,
+                        max: 100,
+                      ),
+                      state is UploadingState
+                          ? Column(
+                              children: [
+                                const CircularProgressIndicator(
+                                  color: Colors.greenAccent,
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                Text(
+                                  'Please wait ',
+                                  style: style(),
+                                  textScaleFactor: 1.25,
+                                ),
+                              ],
+                            )
+                          : ElevatedButton(
+                              onPressed: onPost,
+                              style: ElevatedButton.styleFrom(
+                                primary: Colors.greenAccent,
+                                shape: const StadiumBorder(),
+                              ),
+                              child: Text('Post', style: style()),
+                            ),
+                    ],
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
-    );
+          ),
+        );
+      },
+    ));
   }
 
   onPost() {
-    isLoading = !isLoading;
+    BlocProvider.of<PostBloc>(context).add(
+      CreatePostEvent(
+        post: Post(
+          id: '',
+          title: question.text,
+          body: description.text,
+          importance: importance,
+          views: 0,
+          uid: FirebaseAuthenticationService.user.uid,
+          time: Timestamp.now(),
+          status: "Running",
+          solutions: [],
+          images: "",
+        ),
+        postImage: issueImage,
+      ),
+    );
+    /* isLoading = !isLoading;
     setState(() {});
     FirebaseDatabaseCollection.createPostDatabase(
       {
@@ -256,17 +270,17 @@ class _IssueScreenState extends State<IssueScreen>
         "status": "Running",
         "solutions": [],
       },
-      images,
+      issueImage,
     ).then(
       (value) {
         isLoading = !isLoading;
         question.clear();
         description.clear();
-        images.clear();
+        issueImage = null;
         importance = 0;
         popSnackbar(context: context, text: 'Post Uploaded Succecfully');
         setState(() {});
       },
-    );
+    ); */
   }
 }

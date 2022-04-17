@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:variable/model/solution.dart';
 
 Post postFromJson(String str) => Post.fromJson(json.decode(str));
@@ -25,11 +26,11 @@ class Post {
   String body;
   int importance;
   int views;
-  String time;
+  Timestamp time;
   String status;
   String uid;
   List<Solution> solutions;
-  List<String> images;
+  String images;
 
   factory Post.fromJson(Map<String, dynamic> json) => Post(
         id: json["id"],
@@ -40,7 +41,7 @@ class Post {
         time: json["time"],
         status: json["status"],
         uid: json["uid"],
-        images: List<String>.from(json["images"].map((x) => x)),
+        images: json["images"],
         solutions: List<Solution>.from(
             json["solutions"].map((x) => Solution.fromJson(x))),
       );

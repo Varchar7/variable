@@ -1,10 +1,8 @@
-import 'package:firebase/firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:variable/auth/auth.dart';
-import 'package:variable/feed/single_feed_widget.dart';
+import 'package:variable/feed/posts_builder.dart';
 import 'package:variable/model/post.dart';
 import 'package:variable/service/Firebase/user_service.dart';
-import 'package:variable/widget/style.dart';
 import 'package:variable/widget/textformfield.dart';
 
 class ShowFeed extends StatefulWidget {
@@ -17,6 +15,7 @@ class ShowFeed extends StatefulWidget {
 class _ShowFeedState extends State<ShowFeed> {
   bool isFavourite = false;
   TextEditingController search = TextEditingController();
+  List<Post> posts = [];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -103,57 +102,10 @@ class _ShowFeedState extends State<ShowFeed> {
                       fontFamily: 'Ubuntu',
                     ),
                   ),
-                  StreamBuilder(
-                    stream: UsersServices.getUsersPost(),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasError) {
-                        return Text(
-                          'Something went wrong',
-                          style: style(),
-                          textAlign: TextAlign.center,
-                          textScaleFactor: 2,
-                        );
-                      } else {
-                        if (snapshot.hasData) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.active) {
-                            print((snapshot.data as QuerySnapshot).docs);
-                            return ListView.builder(
-                              physics: const NeverScrollableScrollPhysics(),
-                              shrinkWrap: true,
-                              itemCount: 10,
-                              itemBuilder: (context, index) {
-                                return IndividualFeed(
-                                  post: Post(
-                                    images: [],
-                                    id: '$index',
-                                    title: 'title',
-                                    body: 'body',
-                                    importance: 2,
-                                    views: 220,
-                                    time: '${DateTime.now()}',
-                                    status: 'Running',
-                                    uid: 'uid',
-                                    solutions: [],
-                                  ),
-                                );
-                              },
-                            );
-                          } else {
-                            return const Center(
-                              child: CircularProgressIndicator(),
-                            );
-                          }
-                        } else {
-                          return const Center(
-                            child: CircularProgressIndicator(
-                              color: Colors.greenAccent,
-                            ),
-                          );
-                        }
-                      }
-                    },
-                  ),
+                  PostsBuilder(
+                    querySnapshot: UsersServices.getAllPost(),
+                    isUserPost: false,
+                  )
                 ],
               ),
             ),

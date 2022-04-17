@@ -1,6 +1,10 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:variable/auth/init_app.dart';
+
+import 'bloc/post/post_bloc.dart';
+import 'bloc/profile/profile_bloc.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -13,12 +17,24 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(
-        primarySwatch: Colors.lightBlue,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => ProfileBloc(),
+          lazy: true,
+        ),
+        BlocProvider(
+          create: (context) => PostBloc(),
+          lazy: true,
+        ),
+      ],
+      child: MaterialApp(
+        theme: ThemeData(
+          primarySwatch: Colors.lightBlue,
+        ),
+        debugShowCheckedModeBanner: false,
+        home: const AppInitScreen(),
       ),
-      debugShowCheckedModeBanner: false,
-      home: const AppInitScreen(),
     );
   }
 }

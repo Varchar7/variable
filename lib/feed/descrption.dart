@@ -1,6 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:variable/feed/text_field.dart';
 import 'package:variable/model/post.dart';
+import 'package:variable/service/Firebase/user_service.dart';
+import 'package:variable/widget/style.dart';
 
 class DescriptiveFeed extends StatefulWidget {
   final Post post;
@@ -39,7 +42,7 @@ class _DescriptiveFeedState extends State<DescriptiveFeed> {
             physics: const BouncingScrollPhysics(),
             children: [
               SizedBox(
-                height: MediaQuery.of(context).size.height * 0.3,
+                height: MediaQuery.of(context).size.height * 0.35,
                 child: Stack(
                   clipBehavior: Clip.none,
                   alignment: Alignment.bottomCenter,
@@ -49,8 +52,22 @@ class _DescriptiveFeedState extends State<DescriptiveFeed> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15),
                       ),
-                      child: Container(
-                        color: Colors.amber,
+                      child: Hero(
+                        tag: widget.post.title,
+                        child: Container(
+                          color: widget.post.images.isEmpty
+                              ? Colors.greenAccent
+                              : null,
+                          decoration: widget.post.images.isEmpty
+                              ? null
+                              : BoxDecoration(
+                                  image: DecorationImage(
+                                    image: NetworkImage(widget.post.images,
+                                        scale: 1),
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                        ),
                       ),
                     ),
                     Positioned(
@@ -94,6 +111,48 @@ class _DescriptiveFeedState extends State<DescriptiveFeed> {
                     ),
                   ],
                 ),
+              ),
+              StreamBuilder(
+                stream: UsersServices.getUser(widget.post.uid),
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    return Text(
+                      'Something went wrong',
+                      style: style(),
+                      textAlign: TextAlign.center,
+                      textScaleFactor: 2,
+                    );
+                  } else {
+                    if (snapshot.hasData) {
+                      if (snapshot.connectionState == ConnectionState.active) {
+                        List<Map<String, dynamic>> rawPosts = [];
+                        snapshot.data;
+                        print((snapshot.data as Map<String,dynamic>));
+                        return ListView.builder(
+                          physics: const NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: 5,
+                          itemBuilder: (context, index) {
+                            return Container(
+                              color: Colors.red,
+                              height: 100,
+                            );
+                          },
+                        );
+                      } else {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
+                    } else {
+                      return const Center(
+                        child: CircularProgressIndicator(
+                          color: Colors.greenAccent,
+                        ),
+                      );
+                    }
+                  }
+                },
               ),
               const Text(
                 'username',
@@ -179,6 +238,7 @@ class Description extends StatelessWidget {
                     ElevatedButton(
                       onPressed: () {},
                       style: ElevatedButton.styleFrom(
+                        primary: Colors.greenAccent,
                         shape: const StadiumBorder(),
                       ),
                       child: const Text(
