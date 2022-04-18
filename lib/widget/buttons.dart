@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
 class AppsButton extends StatelessWidget {
-  String title;
-  double? width;
-  double? height;
-  double? borderRadius;
-  VoidCallback onPressed;
-  Color? color;
-  double? fontSize;
-  AppsButton(
+  final String title;
+  final double? width;
+  final double? height;
+  final double? borderRadius;
+  final VoidCallback onPressed;
+  final Color? color;
+  final double? fontSize;
+  const AppsButton(
       {Key? key,
       required this.title,
       required this.onPressed,

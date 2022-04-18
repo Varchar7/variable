@@ -12,3 +12,9 @@ class SavedState extends PostState {}
 class PostDeletingState extends PostState {}
 
 class PostDeletedState extends PostState {}
+
+class SolutionPostingState extends PostState {}
+
+class SolutionPostedState extends PostState {}
+
+class GetSolutionsState extends PostState {}

@@ -4,7 +4,7 @@ import 'package:variable/bloc/post/post_bloc.dart';
 import 'package:variable/widget/alert_dailog.dart';
 import 'package:variable/widget/style.dart';
 import '../model/post.dart';
-import 'descrption.dart';
+import 'feed_descrption_feed.dart';
 
 class IndividualFeed extends StatefulWidget {
   final Post post;

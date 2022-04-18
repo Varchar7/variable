@@ -39,6 +39,7 @@ class FirebaseAuthenticationService {
           "points": 0,
           "accuracy": 0,
           "favourite": [],
+          "solutions": [],
           "saved": [],
         },
       );

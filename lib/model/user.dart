@@ -17,6 +17,7 @@ class AppUser {
     required this.followers,
     required this.points,
     required this.accuracy,
+    required this.solutions,
     required this.favourite,
     required this.saved,
   });
@@ -33,7 +34,9 @@ class AppUser {
   int points;
   int accuracy;
   List<String> favourite;
+  List<String> solutions;
   List<String> saved;
+  
 
   factory AppUser.fromJson(Map<String, dynamic> json) => AppUser(
         username: json["username"],
@@ -42,6 +45,7 @@ class AppUser {
         mobile: json["mobile"],
         image: json["image"],
         uid: json["uid"],
+        solutions: List<String>.from(json["solutions"].map((x) => x)),
         posts: List<String>.from(json["posts"].map((x) => x)),
         followings: List<String>.from(json["followings"].map((x) => x)),
         followers: List<String>.from(json["followers"].map((x) => x)),
@@ -58,6 +62,7 @@ class AppUser {
         "mobile": mobile,
         "image": image,
         "uid": uid,
+        "solutions":List<dynamic>.from(solutions.map((x) => x)),
         "posts": List<dynamic>.from(posts.map((x) => x)),
         "followings": List<dynamic>.from(followings.map((x) => x)),
         "followers": List<dynamic>.from(followers.map((x) => x)),

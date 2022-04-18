@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:variable/model/post.dart';
+import 'package:variable/model/solution.dart';
 import 'package:variable/service/Firebase/curd_user_database.dart';
 
 part 'post_event.dart';
@@ -35,6 +36,11 @@ class PostBloc extends Bloc<PostEvent, PostState> {
             event.haveImage,
           );
           emit(PostDeletedState());
+        } else if (event is SolutionPostEvent) {
+          emit(SolutionPostingState());
+          await FirebaseDatabaseCollection.createSoluton(
+              event.solution.toJson());
+          emit(SolutionPostedState());
         }
       },
     );

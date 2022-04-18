@@ -14,3 +14,8 @@ class DeletePostEvent extends PostEvent {
   final bool haveImage;
   DeletePostEvent({required this.postID, required this.haveImage});
 }
+
+class SolutionPostEvent extends PostEvent {
+  final Solution solution;
+  SolutionPostEvent({required this.solution});
+}

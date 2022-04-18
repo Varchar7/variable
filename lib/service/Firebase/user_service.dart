@@ -3,10 +3,11 @@ import 'package:variable/service/Firebase/auth.dart';
 import 'package:variable/service/Firebase/curd_user_database.dart';
 
 class UsersServices {
-  static Stream<DocumentSnapshot<Object?>> getUser(String uid) {
-    return FirebaseDatabaseCollection.usersCollectionReference
+  static Future<Map<String, dynamic>> getUser(String uid) async {
+    final data = await FirebaseDatabaseCollection.usersCollectionReference
         .doc(uid)
-        .snapshots();
+        .get();
+    return data.data() as Map<String, dynamic>;
   }
 
   static Stream<QuerySnapshot<Object?>> getUsersPost() {
@@ -15,7 +16,23 @@ class UsersServices {
         .snapshots();
   }
 
+  static Stream<QuerySnapshot<Object?>> getOtherUsersPost(String id) {
+    return FirebaseDatabaseCollection.postsCollectionReference
+        .where("uid", isEqualTo: id)
+        .snapshots();
+  }
+
   static Stream<QuerySnapshot<Object?>> getAllPost() {
     return FirebaseDatabaseCollection.postsCollectionReference.snapshots();
+  }
+
+  static Stream<QuerySnapshot<Object?>> getUsers() {
+    return FirebaseDatabaseCollection.usersCollectionReference.snapshots();
+  }
+
+  static Stream<QuerySnapshot<Object?>> getSoluions(String postID) {
+    return FirebaseDatabaseCollection.solutionsCollectionReference
+        .where("postID", isEqualTo: postID)
+        .snapshots();
   }
 }

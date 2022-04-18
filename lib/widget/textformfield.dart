@@ -4,10 +4,10 @@ import 'package:variable/widget/style.dart';
 
 class InputField extends StatelessWidget {
   final TextEditingController controller;
-  String? title;
-  int? textArea;
-  Widget? search;
-  InputField(
+  final String? title;
+  final int? textArea;
+  final Widget? search;
+  const InputField(
       {Key? key,
       required this.controller,
       this.textArea,
@@ -48,9 +48,9 @@ class InputField extends StatelessWidget {
 }
 
 class InputFieldNumber extends StatelessWidget {
-  TextEditingController controller = TextEditingController();
-  String? title;
-  InputFieldNumber({
+  final TextEditingController controller;
+  final String? title;
+  const InputFieldNumber({
     Key? key,
     required this.controller,
     this.title,

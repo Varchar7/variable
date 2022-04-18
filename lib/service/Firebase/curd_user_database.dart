@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -10,6 +11,9 @@ class FirebaseDatabaseCollection {
 
   static CollectionReference postsCollectionReference =
       FirebaseFirestore.instance.collection('posts');
+
+  static CollectionReference solutionsCollectionReference =
+      FirebaseFirestore.instance.collection('solutions');
 
   static Future createUserDatabase() async {
     usersCollectionReference.doc(FirebaseAuthenticationService.user.uid);
@@ -32,7 +36,6 @@ class FirebaseDatabaseCollection {
         .doc(FirebaseAuthenticationService.user.uid)
         .get();
     Map<String, dynamic> response = data.data() as Map<String, dynamic>;
-    print(response["account"].runtimeType);
     return response;
   }
 
@@ -74,5 +77,67 @@ class FirebaseDatabaseCollection {
     Map<String, dynamic> response = data.data() as Map<String, dynamic>;
 
     return response;
+  }
+
+  static createSoluton(Map<String, dynamic> data) {
+    String id = postsCollectionReference.doc().id;
+    data.addAll(
+      {
+        "id": id,
+      },
+    );
+    solutionsCollectionReference.doc(id).set(data);
+
+    updateDataOnUserDatabase(
+      {
+        "solutions": FieldValue.arrayUnion([id]),
+      },
+    );
+  }
+
+  static Future deleteSoluton(String id) async {
+    await solutionsCollectionReference.doc(id).delete();
+    await updateDataOnUserDatabase(
+      {
+        "solutions": FieldValue.arrayRemove([id])
+      },
+    );
+  }
+
+  static followUser(String id) async {
+    String uid = FirebaseAuthenticationService.user.uid;
+    await usersCollectionReference.doc(uid).update(
+      {
+        "followings": FieldValue.arrayUnion([id])
+      },
+    );
+    await usersCollectionReference.doc(id).update(
+      {
+        "followings": FieldValue.arrayUnion([uid])
+      },
+    );
+  }
+
+  static unFollowUser(String id) async {
+    String uid = FirebaseAuthenticationService.user.uid;
+    await usersCollectionReference.doc(uid).update(
+      {
+        "followings": FieldValue.arrayRemove([id])
+      },
+    );
+    await usersCollectionReference.doc(id).update(
+      {
+        "followings": FieldValue.arrayRemove([uid])
+      },
+    );
+  }
+
+    static addFavouriteList(String id) async {
+       String uid = FirebaseAuthenticationService.user.uid;
+    await usersCollectionReference.doc(uid).update(
+      {
+        "followings": FieldValue.arrayRemove([id])
+      },
+    );
   }
 }

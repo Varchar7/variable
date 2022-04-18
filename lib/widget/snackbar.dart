@@ -14,3 +14,12 @@ popSnackbar({required BuildContext context, required String text}) {
     ),
   );
 }
+/* 
+popMaterialBanner({required BuildContext context, required String text}) {
+  ScaffoldMessenger.of(context).showMaterialBanner(
+    MaterialBanner(
+      content: content,
+      actions: actions,
+    ),
+  );
+} */

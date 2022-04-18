@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:variable/profile/user_profile.dart';
+import 'package:variable/search/search_users.dart';
 import 'package:variable/user_problem/problem.dart';
 
 import '../feed/feed.dart';
@@ -18,13 +19,11 @@ class _PageManagerState extends State<PageManager> {
   Widget build(BuildContext context) {
     return PageView(
       controller: pageController,
-      children: [
-        const ShowFeed(),
-        const IssueScreen(),
-        Container(
-          color: Colors.blue,
-        ),
-        const ShowProfile(),
+      children: const [
+        ShowFeed(),
+        IssueScreen(),
+        SearchUsers(),
+        ShowProfile(),
       ],
     );
   }
