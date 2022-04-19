@@ -16,23 +16,46 @@ class UsersServices {
         .snapshots();
   }
 
-  static Stream<QuerySnapshot<Object?>> getOtherUsersPost(String id) {
+  static Stream<QuerySnapshot<Object?>> getOtherUserPost(String id) {
     return FirebaseDatabaseCollection.postsCollectionReference
         .where("uid", isEqualTo: id)
         .snapshots();
   }
 
+  static Stream<QuerySnapshot<Object?>> getOtherUsers(List<String> ids) {
+    return FirebaseDatabaseCollection.usersCollectionReference
+        .where("uid", whereIn: ids)
+        .snapshots();
+  }
+
   static Stream<QuerySnapshot<Object?>> getAllPost() {
-    return FirebaseDatabaseCollection.postsCollectionReference.snapshots();
+    return FirebaseDatabaseCollection.postsCollectionReference
+        .orderBy(
+          "importance",
+          descending: true,
+        )
+        .snapshots();
   }
 
   static Stream<QuerySnapshot<Object?>> getUsers() {
     return FirebaseDatabaseCollection.usersCollectionReference.snapshots();
   }
 
+  static Stream<DocumentSnapshot<Object?>> getIndividualUser(String uid) {
+    return FirebaseDatabaseCollection.usersCollectionReference
+        .doc(uid)
+        .snapshots();
+  }
+
   static Stream<QuerySnapshot<Object?>> getSoluions(String postID) {
     return FirebaseDatabaseCollection.solutionsCollectionReference
         .where("postID", isEqualTo: postID)
+        .snapshots();
+  }
+
+  static Stream<DocumentSnapshot<Object?>> getChats(String chatID) {
+    return FirebaseDatabaseCollection.chatsCollectionReference
+        .doc(chatID)
         .snapshots();
   }
 }

@@ -13,3 +13,8 @@ class UserProfileState extends ProfileState {
   UserProfileState({required this.appUser});
 }
 
+class OtherProfileState extends ProfileState {
+  final String uid;
+  OtherProfileState({required this.uid});
+}
+

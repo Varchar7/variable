@@ -10,7 +10,7 @@ class TextAreaField extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextFormField(
       controller: textEditingController,
-      maxLines: 6,
+      maxLines: 2,
       keyboardType: TextInputType.multiline,
       style: style(),
       decoration: InputDecoration(

@@ -15,7 +15,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           Map<String, dynamic> json =
               await FirebaseDatabaseCollection.selectDataOnUserDatabase();
           AppUser appUser = AppUser.fromJson(json);
-
           emit(
             UserProfileState(
               appUser: appUser,
@@ -23,8 +22,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           );
         } else if (event is GetOtherUserProfileEvent) {
           emit(
-            UserProfileState(
-              appUser: event.appUser,
+            OtherProfileState(
+              uid: event.uid,
             ),
           );
         }

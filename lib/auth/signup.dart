@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:variable/auth/login.dart';
 import 'package:variable/service/Firebase/auth.dart';
+import 'package:variable/widget/snackbar.dart';
 
 import '../manager/manage.dart';
 import 'auth.dart';
@@ -244,13 +245,8 @@ class _SignUpState extends State<SignUp> {
                             ),
                           );
                         } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text(
-                                'Something went wrong',
-                              ),
-                            ),
-                          );
+                          popSnackbar(
+                              context: context, text: 'Something went wrong');
                         }
                       }
                     },
@@ -320,7 +316,7 @@ class _SignUpState extends State<SignUp> {
   TextStyle style() {
     return const TextStyle(
       fontFamily: 'Ubuntu',
-      color: Colors.lightBlue,
+      color: Colors.black,
     );
   }
 }

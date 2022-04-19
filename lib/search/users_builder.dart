@@ -3,17 +3,20 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:variable/bloc/chat/chat_bloc.dart';
 import 'package:variable/bloc/profile/profile_bloc.dart';
+import 'package:variable/chat/inchat.dart';
 import 'package:variable/model/user.dart';
 import 'package:variable/profile/other_profile.dart';
 import 'package:variable/service/Firebase/auth.dart';
-import 'package:variable/service/Firebase/curd_user_database.dart';
 import 'package:variable/widget/style.dart';
 
 class UsersBuilder extends StatelessWidget {
   final Stream<QuerySnapshot<Object?>> querySnapshot;
+  final Widget Function(List<AppUser>)? builder;
   const UsersBuilder({
     Key? key,
+    this.builder,
     required this.querySnapshot,
   }) : super(key: key);
 
@@ -34,6 +37,7 @@ class UsersBuilder extends StatelessWidget {
             if (snapshot.connectionState == ConnectionState.active) {
               List<Map<String, dynamic>> rawUsers = [];
               for (var element in (snapshot.data as QuerySnapshot).docs) {
+                element.data();
                 rawUsers.add(element.data() as Map<String, dynamic>);
               }
               List<AppUser> users =
@@ -42,30 +46,51 @@ class UsersBuilder extends StatelessWidget {
                 (element) =>
                     element.uid == FirebaseAuthenticationService.user.uid,
               );
-              return ListView.builder(
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: users.length,
-                itemBuilder: (context, index) {
-                  return Card(
-                    shape: const StadiumBorder(),
-                    elevation: 3,
-                    child: ListTile(
-                      tileColor: Colors.transparent,
-                      onTap: () {
-                        BlocProvider.of<ProfileBloc>(context).add(
-                          GetOtherUserProfileEvent(
-                            appUser: users[index],
-                          ),
-                        );
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const OtherUser(),
-                          ),
-                        );
-                      },
-                      trailing: BlocBuilder<ProfileBloc, ProfileState>(
+              return builder == null
+                  ? ListView.builder(
+                      physics: const NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: users.length,
+                      itemBuilder: (context, index) {
+                        return Card(
+                          shape: const StadiumBorder(),
+                          elevation: 3,
+                          child: ListTile(
+                            tileColor: Colors.transparent,
+                            onTap: () {
+                              BlocProvider.of<ProfileBloc>(context).add(
+                                GetOtherUserProfileEvent(
+                                  uid: users[index].uid,
+                                ),
+                              );
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const OtherUser(),
+                                ),
+                              );
+                            },
+                            trailing: IconButton(
+                              onPressed: () async {
+                                BlocProvider.of<ChatBloc>(context).add(
+                                  ChatStatusEvent(
+                                    user: users[index],
+                                  ),
+                                );
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => UserChatPage(
+                                      couple: users[index],
+                                    ),
+                                  ),
+                                );
+                              },
+                              icon: const Icon(
+                                Icons.message,
+                              ),
+                            ),
+                            /* BlocBuilder<ProfileBloc, ProfileState>(
                         builder: (context, state) {
                           if (state is UserProfileState) {
                             return ElevatedButton(
@@ -97,23 +122,24 @@ class UsersBuilder extends StatelessWidget {
                             return const CircularProgressIndicator();
                           }
                         },
-                      ),
-                      leading: CircleAvatar(
-                        backgroundColor: users[index].image.isEmpty
-                            ? Colors.greenAccent
-                            : null,
-                        backgroundImage: users[index].image.isEmpty
-                            ? null
-                            : NetworkImage(users[index].image),
-                      ),
-                      title: Text(
-                        users[index].username,
-                        style: style(),
-                      ),
-                    ),
-                  );
-                },
-              );
+                      ), */
+                            leading: CircleAvatar(
+                              backgroundColor: users[index].image.isEmpty
+                                  ? Colors.greenAccent
+                                  : null,
+                              backgroundImage: users[index].image.isEmpty
+                                  ? null
+                                  : NetworkImage(users[index].image),
+                            ),
+                            title: Text(
+                              users[index].username,
+                              style: style(),
+                            ),
+                          ),
+                        );
+                      },
+                    )
+                  : builder!(users);
             } else {
               return const Center(
                 child: CircularProgressIndicator(),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:variable/bloc/post/post_bloc.dart';
 import 'package:variable/widget/alert_dailog.dart';
 import 'package:variable/widget/style.dart';
@@ -64,8 +65,8 @@ class _IndividualFeedState extends State<IndividualFeed> {
                             ? null
                             : BoxDecoration(
                                 image: DecorationImage(
-                                  image:
-                                      NetworkImage(widget.post.images, scale: 1),
+                                  image: NetworkImage(widget.post.images,
+                                      scale: 1),
                                   fit: BoxFit.cover,
                                 ),
                               ),
@@ -160,7 +161,7 @@ class _IndividualFeedState extends State<IndividualFeed> {
                       ),
                       Text(
                         widget.post.body,
-                        overflow: TextOverflow.clip,
+                        overflow: TextOverflow.ellipsis,
                         textScaleFactor: 1.25,
                         style: const TextStyle(
                           fontFamily: 'Ubuntu',
@@ -169,9 +170,9 @@ class _IndividualFeedState extends State<IndividualFeed> {
                       Align(
                         alignment: Alignment.bottomRight,
                         child: Text(
-                          "${widget.post.time.toDate().hour}:${widget.post.time.toDate().minute}\n"
-                          '${widget.post.time.toDate().day}-${widget.post.time.toDate().month}-${widget.post.time.toDate().year}',
+                          getMessageTime(widget.post.time.toDate()),
                           textAlign: TextAlign.end,
+                          textScaleFactor: 0.75,
                           overflow: TextOverflow.clip,
                           style: const TextStyle(
                             fontFamily: 'Ubuntu',
@@ -187,5 +188,10 @@ class _IndividualFeedState extends State<IndividualFeed> {
         ),
       ),
     );
+  }
+
+  String getMessageTime(DateTime dateTime) {
+    final DateFormat formatter = DateFormat('dd-MMM-yyyy h:m');
+    return formatter.format(dateTime);
   }
 }

@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:variable/profile/user_profile.dart';
 import 'package:variable/search/search_users.dart';
 import 'package:variable/user_problem/problem.dart';
@@ -14,6 +16,11 @@ class PageManager extends StatefulWidget {
 
 class _PageManagerState extends State<PageManager> {
   PageController pageController = PageController();
+  @override
+  void dispose() {
+    super.dispose();
+    SystemChannels.platform.invokeMethod('SystemNavigator.pop');
+  }
 
   @override
   Widget build(BuildContext context) {

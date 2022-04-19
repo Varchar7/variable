@@ -22,6 +22,7 @@ class InputField extends StatelessWidget {
         controller: controller,
         maxLines: textArea,
         style: style(),
+        focusNode: FocusNode(),
         decoration: InputDecoration(
           filled: true,
           hintText: title,

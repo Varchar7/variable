@@ -10,7 +10,8 @@ import 'package:variable/widget/snackbar.dart';
 class Description extends StatefulWidget {
   final ScrollController scrollController;
   final String postID;
-  const Description({Key? key, required this.scrollController,required this.postID})
+  const Description(
+      {Key? key, required this.scrollController, required this.postID})
       : super(key: key);
 
   @override
@@ -79,7 +80,7 @@ class _DescriptionState extends State<Description> {
           child: Padding(
             padding: const EdgeInsets.only(left: 10, right: 10),
             child: SizedBox(
-              height: MediaQuery.of(context).size.height * 0.25,
+              height: MediaQuery.of(context).size.height * 0.15,
               width: MediaQuery.of(context).size.width,
               child: Column(
                 children: [
@@ -126,8 +127,10 @@ class _DescriptionState extends State<Description> {
                       ),
                     ],
                   ),
-                  TextAreaField(
-                    textEditingController: post,
+                  Expanded(
+                    child: TextAreaField(
+                      textEditingController: post,
+                    ),
                   ),
                 ],
               ),

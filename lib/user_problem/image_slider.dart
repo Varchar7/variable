@@ -17,7 +17,7 @@ class _ImageSliderState extends State<ImageSlider> {
       height: MediaQuery.of(context).size.height * 0.4,
       width: MediaQuery.of(context).size.width,
       child: Card(
-        clipBehavior: Clip.antiAliasWithSaveLayer,
+        clipBehavior: Clip.antiAliasWithSaveLayer ,
         elevation: 7,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),

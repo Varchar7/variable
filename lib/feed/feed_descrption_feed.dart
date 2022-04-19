@@ -102,30 +102,7 @@ class _DescriptiveFeedState extends State<DescriptiveFeed> {
                           height: 75,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: const [
-                              Chip(
-                                avatar: Icon(Icons.arrow_upward),
-                                label: Text(
-                                  '12',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontFamily: 'Ubuntu',
-                                  ),
-                                  textScaleFactor: 1.25,
-                                ),
-                              ),
-                              Chip(
-                                avatar: Icon(Icons.arrow_downward),
-                                label: Text(
-                                  '2',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontFamily: 'Ubuntu',
-                                  ),
-                                  textScaleFactor: 1.25,
-                                ),
-                              ),
-                            ],
+                            children: const [],
                           ),
                         ),
                         Text(

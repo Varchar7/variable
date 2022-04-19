@@ -16,6 +16,7 @@ class UserProfilePicture {
 
     final url = await taskSnapshot.ref.getDownloadURL();
     FirebaseDatabaseCollection.updateDataOnUserDatabase(
+      FirebaseAuthenticationService.user.uid,
       {
         "image": url,
       },
@@ -24,6 +25,7 @@ class UserProfilePicture {
 
   static Future<void> deleteProfilePicture() async {
     await FirebaseDatabaseCollection.updateDataOnUserDatabase(
+      FirebaseAuthenticationService.user.uid,
       {
         "image": "",
       },

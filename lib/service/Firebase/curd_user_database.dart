@@ -15,6 +15,9 @@ class FirebaseDatabaseCollection {
   static CollectionReference solutionsCollectionReference =
       FirebaseFirestore.instance.collection('solutions');
 
+  static CollectionReference chatsCollectionReference =
+      FirebaseFirestore.instance.collection('chats');
+
   static Future createUserDatabase() async {
     usersCollectionReference.doc(FirebaseAuthenticationService.user.uid);
   }
@@ -25,10 +28,8 @@ class FirebaseDatabaseCollection {
         .set(data);
   }
 
-  static updateDataOnUserDatabase(Map<String, dynamic> data) async {
-    usersCollectionReference
-        .doc(FirebaseAuthenticationService.user.uid)
-        .update(data);
+  static updateDataOnUserDatabase(String uid, Map<String, dynamic> data) async {
+    usersCollectionReference.doc(uid).update(data);
   }
 
   static Future<Map<String, dynamic>> selectDataOnUserDatabase() async {
@@ -56,6 +57,7 @@ class FirebaseDatabaseCollection {
     );
     postsCollectionReference.doc(id).set(data);
     updateDataOnUserDatabase(
+      FirebaseAuthenticationService.user.uid,
       {
         "posts": FieldValue.arrayUnion([id]),
       },
@@ -65,6 +67,7 @@ class FirebaseDatabaseCollection {
   static Future deletePostDatabase(String id, bool images) async {
     await postsCollectionReference.doc(id).delete();
     await updateDataOnUserDatabase(
+      FirebaseAuthenticationService.user.uid,
       {
         "posts": FieldValue.arrayRemove([id])
       },
@@ -89,6 +92,7 @@ class FirebaseDatabaseCollection {
     solutionsCollectionReference.doc(id).set(data);
 
     updateDataOnUserDatabase(
+      FirebaseAuthenticationService.user.uid,
       {
         "solutions": FieldValue.arrayUnion([id]),
       },
@@ -98,6 +102,7 @@ class FirebaseDatabaseCollection {
   static Future deleteSoluton(String id) async {
     await solutionsCollectionReference.doc(id).delete();
     await updateDataOnUserDatabase(
+      FirebaseAuthenticationService.user.uid,
       {
         "solutions": FieldValue.arrayRemove([id])
       },
@@ -113,7 +118,7 @@ class FirebaseDatabaseCollection {
     );
     await usersCollectionReference.doc(id).update(
       {
-        "followings": FieldValue.arrayUnion([uid])
+        "followers": FieldValue.arrayUnion([uid])
       },
     );
   }
@@ -127,16 +132,74 @@ class FirebaseDatabaseCollection {
     );
     await usersCollectionReference.doc(id).update(
       {
-        "followings": FieldValue.arrayRemove([uid])
+        "followers": FieldValue.arrayRemove([uid])
       },
     );
   }
 
-    static addFavouriteList(String id) async {
-       String uid = FirebaseAuthenticationService.user.uid;
+  static addFavouriteList(String id) async {
+    String uid = FirebaseAuthenticationService.user.uid;
     await usersCollectionReference.doc(uid).update(
       {
         "followings": FieldValue.arrayRemove([id])
+      },
+    );
+  }
+
+  static Future<String> createChatForUser(String coupleID) async {
+    String id = postsCollectionReference.doc().id;
+    updateDataOnUserDatabase(
+      FirebaseAuthenticationService.user.uid,
+      {
+        "chat": FieldValue.arrayUnion(
+          [
+            {
+              "chatid": id,
+              "couple": coupleID,
+            },
+          ],
+        ),
+      },
+    );
+    updateDataOnUserDatabase(
+      coupleID,
+      {
+        "chat": FieldValue.arrayUnion(
+          [
+            {
+              "chatid": id,
+              "couple": FirebaseAuthenticationService.user.uid,
+            },
+          ],
+        ),
+      },
+    );
+    await chatsCollectionReference.doc(id).set(
+      {
+        "messages": [],
+      },
+    );
+    return id;
+  }
+
+  static Future sendMessage(
+      String chatID, Map<String, dynamic> message) async {
+    await chatsCollectionReference
+        .doc(chatID)
+        .update(
+      {
+        "messages": FieldValue.arrayUnion([message]),
+      },
+    );
+  }
+
+  static Future deleteMessage(
+      String chatID, Map<String, dynamic> message) async {
+    await chatsCollectionReference
+        .doc(chatID)
+        .update(
+      {
+        "messages": FieldValue.arrayRemove([message]),
       },
     );
   }

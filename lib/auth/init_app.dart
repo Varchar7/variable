@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
 import 'package:variable/auth/auth.dart';
 import 'package:variable/auth/splash.dart';
+import 'package:variable/bloc/profile/profile_bloc.dart';
 import 'package:variable/widget/style.dart';
 
 import '../manager/manage.dart';
@@ -19,7 +21,7 @@ class _AppInitScreenState extends State<AppInitScreen> {
   void initState() {
     super.initState();
     Future.delayed(
-      const Duration(seconds: 5),
+      const Duration(seconds: 3),
       () {
         checkIfUserAvailable().then(
           (value) {

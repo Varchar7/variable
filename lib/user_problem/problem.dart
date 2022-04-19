@@ -4,7 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:variable/auth/auth.dart';
 import 'package:variable/bloc/post/post_bloc.dart';
 import 'package:variable/model/post.dart';
 import 'package:variable/service/Firebase/auth.dart';
@@ -58,7 +57,10 @@ class _IssueScreenState extends State<IssueScreen>
         description.clear();
         issueImage = null;
         importance = 0;
-        popSnackbar(context: context, text: 'Post Uploaded Succecfully',);
+        popSnackbar(
+          context: context,
+          text: 'Post Uploaded Succecfully',
+        );
         setState(() {});
       }
     }, child: BlocBuilder<PostBloc, PostState>(
@@ -74,13 +76,10 @@ class _IssueScreenState extends State<IssueScreen>
                 SliverAppBar(
                   expandedHeight: 75.0,
                   leading: IconButton(
-                    onPressed: () async {
-                      await KeepUser.logOutUser();
-                      Navigator.of(context).pop();
-                    },
+                    onPressed: () {},
                     color: Colors.black,
                     icon: const Icon(
-                      Icons.logout,
+                      Icons.arrow_back_ios,
                     ),
                   ),
                   flexibleSpace: const FlexibleSpaceBar(

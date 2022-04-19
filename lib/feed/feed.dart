@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:variable/auth/auth.dart';
+import 'package:variable/auth/splash.dart';
 import 'package:variable/feed/posts_builder.dart';
 import 'package:variable/model/post.dart';
 import 'package:variable/service/Firebase/user_service.dart';
@@ -32,7 +33,11 @@ class _ShowFeedState extends State<ShowFeed> {
               leading: IconButton(
                 onPressed: () async {
                   await KeepUser.logOutUser();
-                  Navigator.of(context).pop();
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: ((context) => const Splash()),
+                    ),
+                  );
                 },
                 color: Colors.black,
                 icon: const Icon(
@@ -76,7 +81,7 @@ class _ShowFeedState extends State<ShowFeed> {
                       ),
                     ),
                   ),
-                  const Text(
+                  /*  const Text(
                     'Explore the your interest',
                     textScaleFactor: 1.25,
                     style: TextStyle(
@@ -94,7 +99,7 @@ class _ShowFeedState extends State<ShowFeed> {
                         );
                       },
                     ),
-                  ),
+                  ), */
                   const Text(
                     'Explore interested feed',
                     textScaleFactor: 1.25,

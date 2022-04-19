@@ -2,7 +2,10 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:variable/model/solution.dart';
+import 'package:variable/search/users_builder.dart';
+import 'package:variable/service/Firebase/user_service.dart';
 import 'package:variable/widget/style.dart';
 
 class SolutionBuilder extends StatelessWidget {
@@ -34,19 +37,54 @@ class SolutionBuilder extends StatelessWidget {
               List<Solution> solutions =
                   rawPosts.map((e) => Solution.fromJson(e)).toList();
 
-              return ListView.builder(
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: solutions.length,
-                itemBuilder: (context, index) {
-                  return Card(
-                    child: Text(
-                      solutions[index].solution,
-                      style: style(),
-                    ),
+              return UsersBuilder(
+                querySnapshot: UsersServices.getOtherUsers(
+                  solutions.map((e) => e.uid).toList(),
+                ),
+                builder: (users) {
+                  return ListView.builder(
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: solutions.length,
+                    itemBuilder: (context, index) {
+                      return Card(
+                        child: ListTile(
+                          tileColor: Colors.transparent,
+                          title: Text(
+                            solutions[index].solution,
+                            style: style(),
+                          ),
+                          trailing: Wrap(
+                            children: [
+                              Text(
+                                getMessageTime(solutions[index].time.toDate()),
+                                style: style(),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
                   );
                 },
-              );
+              ); /* Card(
+                    child: ListTile(
+                      tileColor: Colors.transparent,
+                      title: Text(
+                        solutions[index].solution,
+                        style: style(),
+                      ),
+                      trailing: Wrap(
+                        children: [
+                          Text(
+                            getMessageTime(solutions[index].time.toDate()),
+                            style: style(),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ); */
+
             } else {
               return const Center(
                 child: CircularProgressIndicator(),
@@ -62,5 +100,10 @@ class SolutionBuilder extends StatelessWidget {
         }
       },
     );
+  }
+
+  String getMessageTime(DateTime dateTime) {
+    final DateFormat formatter = DateFormat('dd-MMM-yyyy h:m');
+    return formatter.format(dateTime);
   }
 }

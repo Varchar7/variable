@@ -2,7 +2,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:variable/auth/init_app.dart';
+import 'package:variable/bloc/chat/chat_bloc.dart';
 
+import 'bloc/messages/messages_bloc.dart';
 import 'bloc/post/post_bloc.dart';
 import 'bloc/profile/profile_bloc.dart';
 
@@ -25,6 +27,14 @@ class App extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => PostBloc(),
+          lazy: true,
+        ),
+        BlocProvider(
+          create: (context) => ChatBloc(),
+          lazy: true,
+        ),
+        BlocProvider(
+          create: (context) => MessageSizeBloc(),
           lazy: true,
         ),
       ],
