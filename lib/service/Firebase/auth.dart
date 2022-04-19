@@ -41,6 +41,7 @@ class FirebaseAuthenticationService {
           "favourite": [],
           "solutions": [],
           "saved": [],
+          "chat": [],
         },
       );
       return true;
