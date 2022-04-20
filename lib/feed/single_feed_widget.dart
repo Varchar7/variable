@@ -5,7 +5,7 @@ import 'package:variable/bloc/post/post_bloc.dart';
 import 'package:variable/widget/alert_dailog.dart';
 import 'package:variable/widget/style.dart';
 import '../model/post.dart';
-import 'feed_descrption_feed.dart';
+import 'feed_descrption.dart';
 
 class IndividualFeed extends StatefulWidget {
   final Post post;
@@ -72,17 +72,51 @@ class _IndividualFeedState extends State<IndividualFeed> {
                               ),
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(right: 10),
-                      child: Chip(
-                        avatar: const Icon(
-                          Icons.visibility,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        widget.deleteOption
+                            ? CircleAvatar(
+                                child: IconButton(
+                                  onPressed: () {
+                                    showMyDailog(
+                                      context,
+                                      onCancel: () {
+                                        Navigator.pop(context);
+                                      },
+                                      onSubmit: () {
+                                        BlocProvider.of<PostBloc>(context).add(
+                                          DeletePostEvent(
+                                            postID: widget.post.id,
+                                            haveImage:
+                                                widget.post.images.isNotEmpty,
+                                          ),
+                                        );
+                                        Navigator.pop(context);
+                                      },
+                                      title: "Are you sure to remove this post",
+                                    );
+                                  },
+                                  color: Colors.black,
+                                  icon: const Icon(
+                                    Icons.delete,
+                                  ),
+                                ),
+                              )
+                            : const SizedBox(),
+                        Padding(
+                          padding: const EdgeInsets.only(right: 10),
+                          child: Chip(
+                            avatar: const Icon(
+                              Icons.light_mode,
+                            ),
+                            label: Text(
+                              "${widget.post.views}",
+                              style: style(),
+                            ),
+                          ),
                         ),
-                        label: Text(
-                          "${widget.post.views}",
-                          style: style(),
-                        ),
-                      ),
+                      ],
                     )
                   ],
                 ),
@@ -120,34 +154,6 @@ class _IndividualFeedState extends State<IndividualFeed> {
                               Icons.more_horiz,
                             ),
                           ),
-                          const Expanded(child: SizedBox()),
-                          widget.deleteOption
-                              ? IconButton(
-                                  onPressed: () {
-                                    showMyDailog(
-                                      context,
-                                      onCancel: () {
-                                        Navigator.pop(context);
-                                      },
-                                      onSubmit: () {
-                                        BlocProvider.of<PostBloc>(context).add(
-                                          DeletePostEvent(
-                                            postID: widget.post.id,
-                                            haveImage:
-                                                widget.post.images.isNotEmpty,
-                                          ),
-                                        );
-                                        Navigator.pop(context);
-                                      },
-                                      title: "Are you sure to remove this post",
-                                    );
-                                  },
-                                  color: Colors.red,
-                                  icon: const Icon(
-                                    Icons.delete,
-                                  ),
-                                )
-                              : const SizedBox(),
                         ],
                       ),
                       Text(

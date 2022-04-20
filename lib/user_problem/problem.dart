@@ -239,23 +239,28 @@ class _IssueScreenState extends State<IssueScreen>
   }
 
   onPost() {
-    BlocProvider.of<PostBloc>(context).add(
-      CreatePostEvent(
-        post: Post(
-          id: '',
-          title: question.text,
-          body: description.text,
-          importance: importance,
-          views: 0,
-          uid: FirebaseAuthenticationService.user.uid,
-          time: Timestamp.now(),
-          status: "Running",
-          solutions: [],
-          images: "",
+    if (question.text.isNotEmpty && description.text.isNotEmpty) {
+      BlocProvider.of<PostBloc>(context).add(
+        CreatePostEvent(
+          post: Post(
+            id: '',
+            title: question.text,
+            body: description.text,
+            importance: importance,
+            views: 0,
+            uid: FirebaseAuthenticationService.user.uid,
+            time: Timestamp.now(),
+            status: "Running",
+            solutions: [],
+            images: "",
+          ),
+          postImage: issueImage,
         ),
-        postImage: issueImage,
-      ),
-    );
+      );
+    } else {
+      popSnackbar(context: context, text: "Please fill the post");
+      
+    }
     /* isLoading = !isLoading;
     setState(() {});
     FirebaseDatabaseCollection.createPostDatabase(

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
 import 'package:variable/feed/posts_builder.dart';
+import 'package:variable/profile/followers/followers.dart';
+import 'package:variable/profile/followings/followings.dart';
 import 'package:variable/service/Firebase/user_service.dart';
 import 'package:variable/widget/snackbar.dart';
 
@@ -126,9 +128,6 @@ class _ShowProfileState extends State<ShowProfile> {
                         ],
                       ),
                     ),
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.02,
-                    ),
                     Text(
                       '@' + state.appUser.username,
                       style: style().copyWith(
@@ -153,40 +152,50 @@ class _ShowProfileState extends State<ShowProfile> {
                       children: [
                         TableRow(
                           children: [
-                            "Post",
-                            "Following",
-                            "Followers",
-                          ]
-                              .map(
-                                (e) => Text(
-                                  e,
-                                  textScaleFactor: 1.75,
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(
-                                    fontFamily: 'Ubuntu',
-                                    fontWeight: FontWeight.bold,
-                                    decorationThickness: 2,
+                            FieldBuilder(
+                              title: "Post",
+                              field: "${state.appUser.posts.length}",
+                              callback: () {},
+                            ),
+                            FieldBuilder(
+                              title: "Following",
+                              field: "${state.appUser.followings.length}",
+                              callback: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: ((context) => Followings(
+                                          followings: state.appUser.followings,
+                                        )),
                                   ),
-                                ),
-                              )
-                              .toList(),
-                        ),
-                        TableRow(
-                          children: [
-                            state.appUser.posts.length,
-                            state.appUser.followings.length,
-                            state.appUser.followers.length,
+                                );
+                              },
+                            ),
+                            FieldBuilder(
+                              title: "Followers",
+                              field: "${state.appUser.followers.length}",
+                              callback: () {
+                                // Followers
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: ((context) => Followers(
+                                          followers: state.appUser.followers,
+                                        )),
+                                  ),
+                                );
+                              },
+                            ),
                           ]
                               .map(
-                                (e) => Padding(
-                                  padding: const EdgeInsets.all(8.0),
+                                (e) => InkWell(
+                                  onTap: e.callback,
                                   child: Text(
-                                    '$e',
-                                    textScaleFactor: 1.5,
+                                    e.title + "\n" + e.field,
+                                    textScaleFactor: 1.75,
                                     textAlign: TextAlign.center,
                                     style: const TextStyle(
                                       fontFamily: 'Ubuntu',
                                       fontWeight: FontWeight.bold,
+                                      decorationThickness: 2,
                                     ),
                                   ),
                                 ),
@@ -225,4 +234,12 @@ class _ShowProfileState extends State<ShowProfile> {
       ),
     );
   }
+}
+
+class FieldBuilder {
+  String title;
+  String field;
+  VoidCallback callback;
+  FieldBuilder(
+      {required this.title, required this.field, required this.callback});
 }
