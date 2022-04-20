@@ -111,7 +111,7 @@ class _IndividualFeedState extends State<IndividualFeed> {
                               Icons.light_mode,
                             ),
                             label: Text(
-                              "${widget.post.views}",
+                              "${widget.post.importance}",
                               style: style(),
                             ),
                           ),
