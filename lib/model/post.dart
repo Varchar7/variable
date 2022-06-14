@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:variable/model/solution.dart';
 
 Post postFromJson(String str) => Post.fromJson(json.decode(str));
 
@@ -18,6 +17,7 @@ class Post {
     required this.time,
     required this.status,
     required this.solutions,
+    required this.favourites,
     required this.images,
   });
 
@@ -29,7 +29,8 @@ class Post {
   Timestamp time;
   String status;
   String uid;
-  List<Solution> solutions;
+  List<String> solutions;
+  List<String> favourites;
   String images;
 
   factory Post.fromJson(Map<String, dynamic> json) => Post(
@@ -42,8 +43,16 @@ class Post {
         status: json["status"],
         uid: json["uid"],
         images: json["images"],
-        solutions: List<Solution>.from(
-            json["solutions"].map((x) => Solution.fromJson(x))),
+        favourites: List<String>.from(
+          json["favourites"].map(
+            (x) => x,
+          ),
+        ),
+        solutions: List<String>.from(
+          json["solutions"].map(
+            (x) => x,
+          ),
+        ),
       );
 
   Map<String, dynamic> toJson() => {
@@ -56,6 +65,7 @@ class Post {
         "uid": uid,
         "status": status,
         "images": images,
-        "solutions": List<dynamic>.from(solutions.map((x) => x.toJson())),
+        "favourites": List<String>.from(favourites.map((x) => x)),
+        "solutions": List<String>.from(solutions.map((x) => x)),
       };
 }

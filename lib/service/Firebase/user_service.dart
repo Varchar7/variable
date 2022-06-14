@@ -23,6 +23,15 @@ class UsersServices {
   }
 
   static Stream<QuerySnapshot<Object?>> getOtherUsers(List<String> ids) {
+    Stream<QuerySnapshot<Object?>> test = FirebaseDatabaseCollection
+        .usersCollectionReference
+        .where("uid", whereIn: ids)
+        .snapshots();
+    test.listen((event) {
+      for (var element in event.docs) {
+        print(element);
+      }
+    });
     return FirebaseDatabaseCollection.usersCollectionReference
         .where("uid", whereIn: ids)
         .snapshots();

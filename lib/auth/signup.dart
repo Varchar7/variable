@@ -33,7 +33,13 @@ class _SignUpState extends State<SignUp> {
       phone: mobile.text,
       username: username.text,
     );
-    setState(() {});
+    popSnackbar(
+      context: context,
+      text: "Account Created Successfully",
+    );
+    setState(
+      () {},
+    );
   }
 
   @override
@@ -264,17 +270,6 @@ class _SignUpState extends State<SignUp> {
                     style: TextStyle(
                       color: Colors.white,
                       fontFamily: 'Ubuntu',
-                    ),
-                  ),
-                  Wrap(
-                    alignment: WrapAlignment.center,
-                    runAlignment: WrapAlignment.center,
-                    spacing: 8,
-                    children: List.generate(
-                      3,
-                      (index) => const CircleAvatar(
-                        child: Icon(Icons.account_balance_wallet),
-                      ),
                     ),
                   ),
                   Wrap(

@@ -23,6 +23,7 @@ class PostBloc extends Bloc<PostEvent, PostState> {
               "views": event.post.views,
               "time": event.post.time,
               "uid": event.post.uid,
+              "favourites": event.post.favourites,
               "status": event.post.status,
               "solutions": event.post.solutions,
             },

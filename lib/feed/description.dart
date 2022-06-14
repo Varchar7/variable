@@ -78,7 +78,7 @@ class _DescriptionState extends State<Description> {
             borderRadius: BorderRadius.circular(20),
           ),
           child: Padding(
-            padding: const EdgeInsets.only(left: 10, right: 10),
+            padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
             child: SizedBox(
               height: MediaQuery.of(context).size.height * 0.15,
               width: MediaQuery.of(context).size.width,
@@ -127,10 +127,8 @@ class _DescriptionState extends State<Description> {
                       ),
                     ],
                   ),
-                  Expanded(
-                    child: TextAreaField(
-                      textEditingController: post,
-                    ),
+                  TextAreaField(
+                    textEditingController: post,
                   ),
                 ],
               ),

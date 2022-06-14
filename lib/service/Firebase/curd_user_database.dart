@@ -83,13 +83,18 @@ class FirebaseDatabaseCollection {
   }
 
   static createSoluton(Map<String, dynamic> data) {
-    String id = postsCollectionReference.doc().id;
+    String id = solutionsCollectionReference.doc().id;
     data.addAll(
       {
         "id": id,
       },
     );
     solutionsCollectionReference.doc(id).set(data);
+    postsCollectionReference.doc(data["postID"]).update(
+      {
+        "solutions": FieldValue.arrayUnion([id])
+      },
+    );
 
     updateDataOnUserDatabase(
       FirebaseAuthenticationService.user.uid,
@@ -137,7 +142,7 @@ class FirebaseDatabaseCollection {
     );
   }
 
-  static addFavouriteList(String id) async {
+  static addFollowersList(String id) async {
     String uid = FirebaseAuthenticationService.user.uid;
     await usersCollectionReference.doc(uid).update(
       {
@@ -182,11 +187,8 @@ class FirebaseDatabaseCollection {
     return id;
   }
 
-  static Future sendMessage(
-      String chatID, Map<String, dynamic> message) async {
-    await chatsCollectionReference
-        .doc(chatID)
-        .update(
+  static Future sendMessage(String chatID, Map<String, dynamic> message) async {
+    await chatsCollectionReference.doc(chatID).update(
       {
         "messages": FieldValue.arrayUnion([message]),
       },
@@ -195,11 +197,40 @@ class FirebaseDatabaseCollection {
 
   static Future deleteMessage(
       String chatID, Map<String, dynamic> message) async {
-    await chatsCollectionReference
-        .doc(chatID)
-        .update(
+    await chatsCollectionReference.doc(chatID).update(
       {
         "messages": FieldValue.arrayRemove([message]),
+      },
+    );
+  }
+
+  static Future addUserFavourites(String postID) async {
+    String uid = FirebaseAuthenticationService.user.uid;
+    await usersCollectionReference.doc(uid).update(
+      {
+        "favourite": FieldValue.arrayUnion([postID]),
+      },
+    );
+
+    await postsCollectionReference.doc(postID).update(
+      {
+        "favourites": FieldValue.arrayUnion([uid]),
+      },
+    );
+  }
+
+  static Future removeUserFavourites(String postID) async {
+    String uid = FirebaseAuthenticationService.user.uid;
+
+    await usersCollectionReference.doc(uid).update(
+      {
+        "favourite": FieldValue.arrayRemove([postID]),
+      },
+    );
+
+    await postsCollectionReference.doc(postID).update(
+      {
+        "favourites": FieldValue.arrayRemove([uid]),
       },
     );
   }

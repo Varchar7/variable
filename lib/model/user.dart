@@ -13,6 +13,7 @@ class AppUser {
     required this.image,
     required this.uid,
     required this.posts,
+    required this.messageToken,
     required this.followings,
     required this.followers,
     required this.points,
@@ -29,6 +30,7 @@ class AppUser {
   String mobile;
   String image;
   String uid;
+  String messageToken;
   List<String> posts;
   List<String> followings;
   List<String> followers;
@@ -51,6 +53,7 @@ class AppUser {
         followings: List<String>.from(json["followings"].map((x) => x)),
         followers: List<String>.from(json["followers"].map((x) => x)),
         points: json["points"],
+        messageToken: json["messageToken"],
         accuracy: json["accuracy"],
         favourite: List<String>.from(json["favourite"].map((x) => x)),
         saved: List<String>.from(json["saved"].map((x) => x)),
@@ -65,6 +68,7 @@ class AppUser {
         "mobile": mobile,
         "image": image,
         "uid": uid,
+        "messageToken": messageToken,
         "solutions": List<dynamic>.from(solutions.map((x) => x)),
         "posts": List<dynamic>.from(posts.map((x) => x)),
         "followings": List<dynamic>.from(followings.map((x) => x)),

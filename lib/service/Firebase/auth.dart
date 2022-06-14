@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
+import '../cloud_messages/services.dart';
 import 'curd_user_database.dart';
 
 class FirebaseAuthenticationService {
@@ -17,6 +18,7 @@ class FirebaseAuthenticationService {
     required String phone,
   }) async {
     try {
+      String? messageDeviceToken = await FirebaseMessagesService.getToken();
       UserCredential userCredential =
           await _auth.createUserWithEmailAndPassword(
         email: email,
@@ -33,6 +35,7 @@ class FirebaseAuthenticationService {
           "mobile": phone,
           "image": "",
           "uid": user!.uid,
+          "messageToken": messageDeviceToken,
           "posts": [],
           "followings": [],
           "followers": [],

@@ -248,6 +248,7 @@ class _IssueScreenState extends State<IssueScreen>
             body: description.text,
             importance: importance,
             views: 0,
+            favourites: [],
             uid: FirebaseAuthenticationService.user.uid,
             time: Timestamp.now(),
             status: "Running",
@@ -259,7 +260,6 @@ class _IssueScreenState extends State<IssueScreen>
       );
     } else {
       popSnackbar(context: context, text: "Please fill the post");
-      
     }
     /* isLoading = !isLoading;
     setState(() {});

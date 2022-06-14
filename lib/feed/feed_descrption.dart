@@ -148,11 +148,27 @@ class _DescriptiveFeedState extends State<DescriptiveFeed> {
                           style: style(),
                           textScaleFactor: 1.3,
                         ),
-                        SolutionBuilder(
-                          querySnapshot: UsersServices.getSoluions(
-                            widget.post.id,
-                          ),
-                        ),
+                        widget.post.solutions.isEmpty
+                            ? const Padding(
+                                padding: EdgeInsets.all(10.0),
+                                child: Text(
+                                  "No answere found \n"
+                                  "I think you are smart , can you solve this",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              )
+                            : SolutionBuilder(
+                                querySnapshot: UsersServices.getSoluions(
+                                  widget.post.id,
+                                ),
+                              ),
+                        const SizedBox(
+                          height: 450,
+                        )
                       ],
                     );
                   } else {

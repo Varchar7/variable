@@ -31,11 +31,13 @@ class SolutionBuilder extends StatelessWidget {
           if (snapshot.hasData) {
             if (snapshot.connectionState == ConnectionState.active) {
               List<Map<String, dynamic>> rawPosts = [];
-              for (var element in (snapshot.data as QuerySnapshot).docs) {
-                rawPosts.add(element.data() as Map<String, dynamic>);
+              List<Solution> solutions = [];
+              if ((snapshot.data as QuerySnapshot).docs.isNotEmpty) {
+                for (var element in (snapshot.data as QuerySnapshot).docs) {
+                  rawPosts.add(element.data() as Map<String, dynamic>);
+                }
+                solutions = rawPosts.map((e) => Solution.fromJson(e)).toList();
               }
-              List<Solution> solutions =
-                  rawPosts.map((e) => Solution.fromJson(e)).toList();
 
               return UsersBuilder(
                 querySnapshot: UsersServices.getOtherUsers(
@@ -47,27 +49,28 @@ class SolutionBuilder extends StatelessWidget {
                     shrinkWrap: true,
                     itemCount: solutions.length,
                     itemBuilder: (context, index) {
-                      return Card(
-                        child: ListTile(
-                          tileColor: Colors.transparent,
-                          title: Text(
-                            solutions[index].solution,
-                            style: style(),
-                          ),
-                          trailing: Wrap(
-                            children: [
-                              Text(
-                                getMessageTime(solutions[index].time.toDate()),
-                                style: style(),
-                              ),
-                            ],
-                          ),
+                      return ListTile(
+                        leading: const CircleAvatar(),
+                        tileColor: Colors.transparent,
+                        title: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              solutions[index].solution,
+                              style: style(),
+                            ),
+                            Text(
+                              getMessageTime(solutions[index].time.toDate()),
+                              style: style().copyWith(fontSize: 12),
+                            ),
+                          ],
                         ),
                       );
                     },
                   );
                 },
-              ); /* Card(
+              );
+              /* Card(
                     child: ListTile(
                       tileColor: Colors.transparent,
                       title: Text(

@@ -6,6 +6,8 @@ import 'package:variable/model/post.dart';
 import 'package:variable/service/Firebase/user_service.dart';
 import 'package:variable/widget/textformfield.dart';
 
+import '../push_notification/service.dart';
+
 class ShowFeed extends StatefulWidget {
   const ShowFeed({Key? key}) : super(key: key);
 
@@ -60,7 +62,9 @@ class _ShowFeedState extends State<ShowFeed> {
               shadowColor: Colors.transparent,
               actions: [
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    NotificationService.pushSimple();
+                  },
                   color: Colors.green,
                   icon: const Icon(
                     Icons.notifications,

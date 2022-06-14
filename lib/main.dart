@@ -3,14 +3,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:variable/auth/init_app.dart';
 import 'package:variable/bloc/chat/chat_bloc.dart';
+import 'package:variable/service/cloud_messages/services.dart';
 
 import 'bloc/messages/messages_bloc.dart';
 import 'bloc/post/post_bloc.dart';
 import 'bloc/profile/profile_bloc.dart';
+import 'firebase_options.dart';
+import 'push_notification/service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  Firebase.initializeApp();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  await FirebaseMessagesService.getToken();
+  await FirebaseMessagesService.requestMessageService();
+  FirebaseMessagesService.listenFirebaseMessages();
+  NotificationService.initState();
   runApp(const App());
 }
 
@@ -41,6 +50,7 @@ class App extends StatelessWidget {
       child: MaterialApp(
         theme: ThemeData(
           primarySwatch: Colors.lightBlue,
+          fontFamily: "Ubuntu",
         ),
         debugShowCheckedModeBanner: false,
         home: const AppInitScreen(),
@@ -48,3 +58,12 @@ class App extends StatelessWidget {
     );
   }
 }
+
+// flutterfire configure --project=chat-7d927
+// export PATH="$PATH":"$HOME/.pub-cache/bin" 
+
+// Platform  Firebase App Id
+// web       1:6746703710:web:ab6b61f56f3ccde65df1cf
+// android   1:6746703710:android:3462e9b76bf3d11e5df1cf
+// ios       1:6746703710:ios:95086d24ca1914945df1cf
+// macos     1:6746703710:ios:95086d24ca1914945df1cf

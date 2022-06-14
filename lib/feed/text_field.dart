@@ -10,10 +10,10 @@ class TextAreaField extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextFormField(
       controller: textEditingController,
-      maxLines: 2,
       keyboardType: TextInputType.multiline,
       style: style(),
       decoration: InputDecoration(
+        contentPadding: const EdgeInsets.all(10),
         filled: true,
         hintText: 'Write Something here ...',
         hintStyle: style(),

@@ -39,7 +39,6 @@ class Followings extends StatelessWidget {
             Expanded(
               child: followings.isEmpty
                   ? Center(
-                    
                       child: Text(
                         "not follows anyone",
                         style: style(),
